@@ -1,7 +1,3 @@
-import yaml
-import secrets
-import os
-
 def generate_precliniverse_compose(config):
     """
     Modernized Compose Generator for Precliniverse Wizard V2.
@@ -111,7 +107,10 @@ def generate_precliniverse_compose(config):
                 "DATABASE_URL": f"postgresql://precliniverse:{db_pass}@{db_host}:5432/precliniverse",
                 "SECRET_KEY": secrets.token_urlsafe(32),
                 "OIDC_ISSUER": "http://authentik-server:9000/application/o/precliniquote/",
-                "PRECLINILOG_URL": "http://preclinilog:8000"
+                "PRECLINILOG_URL": "http://preclinilog:8000",
+                # Admin Bootstrap
+                "ADMIN_USERNAME": admin_email,
+                "ADMIN_PASSWORD": admin_pass
             },
             "depends_on": ["preclinilog"],
             "networks": ["preclini-net"],
@@ -130,7 +129,10 @@ def generate_precliniverse_compose(config):
                 "OIDC_ISSUER": "http://authentik-server:9000/application/o/precliniset/",
                 "OIDC_CLIENT_ID": "precliniset",
                 "OIDC_CLIENT_SECRET": secrets.token_urlsafe(32),
-                "PRECLINILOG_URL": "http://preclinilog:8000"
+                "PRECLINILOG_URL": "http://preclinilog:8000",
+                # Admin Bootstrap
+                "SUPERADMIN_EMAIL": admin_email,
+                "SUPERADMIN_PASSWORD": admin_pass
             },
             "depends_on": ["preclinilog"],
             "networks": ["preclini-net"],
