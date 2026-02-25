@@ -5,11 +5,27 @@ import os
 def generate_precliniverse_compose(config):
     """
     Modernized Compose Generator for Precliniverse Wizard V2.
-    config: dict {facility_name, modules, db_external, db_config, sso_external, sso_config}
+    config: dict {facility_name, modules, db_external, db_config, sso_external, sso_config, smtp_config, admin_config}
     """
     db_pass = config.get("db_pass", secrets.token_urlsafe(16))
     sso_pass = config.get("sso_pass", secrets.token_urlsafe(16))
     secret_key = secrets.token_urlsafe(32)
+    
+    # SMTP Vars
+    smtp = config.get("smtp_config", {})
+    smtp_env = {
+        "SMTP_HOST": smtp.get("host", ""),
+        "SMTP_PORT": str(smtp.get("port", "587")),
+        "SMTP_USER": smtp.get("user", ""),
+        "SMTP_PASSWORD": smtp.get("password", ""),
+        "SMTP_USE_TLS": "true" if smtp.get("tls", True) else "false",
+        "FROM_EMAIL": smtp.get("from_email", f"noreply@{config.get('facility_name', 'precliniverse').lower().replace(' ', '-')}.local")
+    }
+
+    # Admin Vars
+    admin = config.get("admin_config", {})
+    admin_email = admin.get("email", "admin@precliniverse.local")
+    admin_pass = admin.get("password", secrets.token_urlsafe(12))
     
     services = {}
     networks = {"preclini-net": {"driver": "bridge"}}
@@ -53,7 +69,15 @@ def generate_precliniverse_compose(config):
             "AUTHENTIK_POSTGRESQL__USER": "precliniverse",
             "AUTHENTIK_POSTGRESQL__NAME": "precliniverse",
             "AUTHENTIK_POSTGRESQL__PASSWORD": db_pass,
-            "AUTHENTIK_SECRET_KEY": secret_key
+            "AUTHENTIK_SECRET_KEY": secret_key,
+            "AUTHENTIK_BOOTSTRAP_PASSWORD": admin_pass,
+            "AUTHENTIK_BOOTSTRAP_EMAIL": admin_email,
+            "AUTHENTIK_EMAIL__HOST": smtp.get("host", ""),
+            "AUTHENTIK_EMAIL__PORT": str(smtp.get("port", "587")),
+            "AUTHENTIK_EMAIL__USERNAME": smtp.get("user", ""),
+            "AUTHENTIK_EMAIL__PASSWORD": smtp.get("password", ""),
+            "AUTHENTIK_EMAIL__USE_TLS": "true" if smtp.get("tls", True) else "false",
+            "AUTHENTIK_EMAIL__FROM": smtp.get("from_email", admin_email)
         },
         "volumes": ["./media:/media"],
         "networks": ["preclini-net"],
@@ -65,9 +89,12 @@ def generate_precliniverse_compose(config):
         "image": "ghcr.io/precliniverse/preclinilog:latest",
         "restart": "always",
         "environment": {
+            **smtp_env,
             "DATABASE_URL": f"postgresql://precliniverse:{db_pass}@{db_host}:5432/precliniverse",
             "SECRET_KEY": secrets.token_urlsafe(32),
-            "OIDC_ISSUER": "http://authentik-server:9000/application/o/preclinilog/"
+            "OIDC_ISSUER": "http://authentik-server:9000/application/o/preclinilog/",
+            "ADMIN_EMAIL": admin_email,
+            "ADMIN_PASSWORD": admin_pass
         },
         "depends_on": ["db", "authentik-server"],
         "networks": ["preclini-net"],
@@ -80,6 +107,7 @@ def generate_precliniverse_compose(config):
             "image": "ghcr.io/precliniverse/precliniquote:latest",
             "restart": "always",
             "environment": {
+                **smtp_env,
                 "DATABASE_URL": f"postgresql://precliniverse:{db_pass}@{db_host}:5432/precliniverse",
                 "SECRET_KEY": secrets.token_urlsafe(32),
                 "OIDC_ISSUER": "http://authentik-server:9000/application/o/precliniquote/",
