@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step 2 - Configuration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen p-12">
+    <div class="max-w-4xl mx-auto bg-gray-800 p-8 rounded-lg border border-gray-700">
+        <h2 class="text-2xl font-bold mb-6">Facility Configuration</h2>
+        <form action="/install/generate" method="POST" class="space-y-6">
+            <input type="hidden" name="modules" value="{{ selected_modules|join(',') }}">
+            
+            <div>
+                <label class="block text-sm font-medium mb-2">Facility Name</label>
+                <input type="text" name="facility_name" required placeholder="My Research Center" 
+                       class="w-full bg-gray-700 border border-gray-600 rounded p-3 focus:outline-none focus:border-blue-500">
+            </div>
+
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium mb-2">PostgreSQL Password (Internal)</label>
+                    <input type="password" name="db_pass" placeholder="Leave empty for auto-gen" 
+                           class="w-full bg-gray-700 border border-gray-600 rounded p-3 focus:outline-none focus:border-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Authentik Secret</label>
+                    <input type="password" name="sso_pass" placeholder="Leave empty for auto-gen" 
+                           class="w-full bg-gray-700 border border-gray-600 rounded p-3 focus:outline-none focus:border-blue-500">
+                </div>
+            </div>
+
+            <div class="flex justify-between pt-6">
+                <a href="/install/step1" class="px-4 py-2 text-gray-400 hover:text-white transition">Back</a>
+                <button type="submit" class="px-8 py-3 bg-blue-600 hover:bg-blue-500 rounded font-bold transition">
+                    Preview Deployment
+                </button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

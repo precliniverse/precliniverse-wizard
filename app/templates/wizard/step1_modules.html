@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step 1 - Select Modules</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen p-12">
+    <div class="max-w-4xl mx-auto bg-gray-800 p-8 rounded-lg border border-gray-700">
+        <h2 class="text-2xl font-bold mb-6">Select Your Modules</h2>
+        <form action="/install/step2" method="POST">
+            <div class="space-y-4 mb-8">
+                <div class="p-4 bg-gray-700 rounded border border-gray-600 flex items-center justify-between">
+                    <div>
+                        <h3 class="font-bold">PrecliniLog (Core)</h3>
+                        <p class="text-sm text-gray-400">Project Registry & CRM. Mandatory.</p>
+                    </div>
+                    <input type="checkbox" name="module" value="preclinilog" checked disabled class="h-6 w-6">
+                    <input type="hidden" name="module" value="preclinilog">
+                </div>
+                
+                <div class="p-4 bg-gray-700 rounded border border-gray-600 flex items-center justify-between">
+                    <div>
+                        <h3 class="font-bold">PrecliniQuote</h3>
+                        <p class="text-sm text-gray-400">Financial Quote Management System.</p>
+                    </div>
+                    <input type="checkbox" name="module" value="precliniquote" class="h-6 w-6">
+                </div>
+
+                <div class="p-4 bg-gray-700 rounded border border-gray-600 flex items-center justify-between opacity-50">
+                    <div>
+                        <h3 class="font-bold">PrecliniSet (LIMS)</h3>
+                        <p class="text-sm text-gray-400">Scientific data & animal tracking. Coming soon in Wizard.</p>
+                    </div>
+                    <input type="checkbox" disabled class="h-6 w-6">
+                </div>
+            </div>
+            
+            <div class="flex justify-between">
+                <a href="/" class="px-4 py-2 text-gray-400 hover:text-white transition">Back</a>
+                <button type="submit" class="px-8 py-3 bg-blue-600 hover:bg-blue-500 rounded font-bold transition">
+                    Next: Configure
+                </button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
