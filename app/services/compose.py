@@ -118,6 +118,25 @@ def generate_precliniverse_compose(config):
             "ports": ["5000:5000"]
         }
 
+    # 5. BRICKS: PrecliniSet
+    if "precliniset" in config.get("modules", []):
+        services["precliniset"] = {
+            "image": "ghcr.io/precliniverse/precliniset:latest",
+            "restart": "always",
+            "environment": {
+                **smtp_env,
+                "DATABASE_URL": f"postgresql://precliniverse:{db_pass}@{db_host}:5432/precliniverse",
+                "SECRET_KEY": secrets.token_urlsafe(32),
+                "OIDC_ISSUER": "http://authentik-server:9000/application/o/precliniset/",
+                "OIDC_CLIENT_ID": "precliniset",
+                "OIDC_CLIENT_SECRET": secrets.token_urlsafe(32),
+                "PRECLINILOG_URL": "http://preclinilog:8000"
+            },
+            "depends_on": ["preclinilog"],
+            "networks": ["preclini-net"],
+            "ports": ["5001:5000"]
+        }
+
     compose = {
         "version": "3.8",
         "services": services,

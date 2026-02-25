@@ -9,25 +9,85 @@
 <body class="bg-gray-900 text-gray-100 min-h-screen p-12">
     <div class="max-w-4xl mx-auto bg-gray-800 p-8 rounded-lg border border-gray-700">
         <h2 class="text-2xl font-bold mb-6">Facility Configuration</h2>
-        <form action="/install/generate" method="POST" class="space-y-6">
+        <form action="/install/generate" method="POST" class="space-y-8">
             <input type="hidden" name="modules" value="{{ selected_modules|join(',') }}">
             
-            <div>
-                <label class="block text-sm font-medium mb-2">Facility Name</label>
-                <input type="text" name="facility_name" required placeholder="My Research Center" 
-                       class="w-full bg-gray-700 border border-gray-600 rounded p-3 focus:outline-none focus:border-blue-500">
-            </div>
-
-            <div class="grid grid-cols-2 gap-6">
+            <!-- General Settings -->
+            <div class="space-y-4">
+                <h3 class="text-lg font-semibold text-blue-400 border-b border-gray-700 pb-2">General Settings</h3>
                 <div>
-                    <label class="block text-sm font-medium mb-2">PostgreSQL Password (Internal)</label>
-                    <input type="password" name="db_pass" placeholder="Leave empty for auto-gen" 
+                    <label class="block text-sm font-medium mb-2">Facility Name</label>
+                    <input type="text" name="facility_name" required placeholder="My Research Center" 
                            class="w-full bg-gray-700 border border-gray-600 rounded p-3 focus:outline-none focus:border-blue-500">
                 </div>
-                <div>
-                    <label class="block text-sm font-medium mb-2">Authentik Secret</label>
-                    <input type="password" name="sso_pass" placeholder="Leave empty for auto-gen" 
-                           class="w-full bg-gray-700 border border-gray-600 rounded p-3 focus:outline-none focus:border-blue-500">
+            </div>
+
+            <!-- Security & Admin -->
+            <div class="space-y-4">
+                <h3 class="text-lg font-semibold text-blue-400 border-b border-gray-700 pb-2">Security & Admin</h3>
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Internal DB Password</label>
+                        <input type="password" name="db_pass" placeholder="Leave empty for auto-gen" 
+                               class="w-full bg-gray-700 border border-gray-600 rounded p-3 focus:outline-none focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Authentik Secret</label>
+                        <input type="password" name="sso_pass" placeholder="Leave empty for auto-gen" 
+                               class="w-full bg-gray-700 border border-gray-600 rounded p-3 focus:outline-none focus:border-blue-500">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Super Admin Email</label>
+                        <input type="email" name="admin_email" placeholder="admin@precliniverse.local" 
+                               class="w-full bg-gray-700 border border-gray-600 rounded p-3 focus:outline-none focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Super Admin Password</label>
+                        <input type="password" name="admin_pass" placeholder="Leave empty for auto-gen" 
+                               class="w-full bg-gray-700 border border-gray-600 rounded p-3 focus:outline-none focus:border-blue-500">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SMTP Configuration -->
+            <div class="space-y-4">
+                <h3 class="text-lg font-semibold text-blue-400 border-b border-gray-700 pb-2">Email (SMTP)</h3>
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">SMTP Host</label>
+                        <input type="text" name="smtp_host" placeholder="smtp.example.com" 
+                               class="w-full bg-gray-700 border border-gray-600 rounded p-3 focus:outline-none focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">SMTP Port</label>
+                        <input type="number" name="smtp_port" placeholder="587" 
+                               class="w-full bg-gray-700 border border-gray-600 rounded p-3 focus:outline-none focus:border-blue-500">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">SMTP User</label>
+                        <input type="text" name="smtp_user" placeholder="user@example.com" 
+                               class="w-full bg-gray-700 border border-gray-600 rounded p-3 focus:outline-none focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">SMTP Password</label>
+                        <input type="password" name="smtp_pass" 
+                               class="w-full bg-gray-700 border border-gray-600 rounded p-3 focus:outline-none focus:border-blue-500">
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <label class="flex items-center space-x-2 cursor-pointer">
+                        <input type="checkbox" name="smtp_tls" checked class="h-5 w-5 text-blue-600 rounded border-gray-600 bg-gray-700">
+                        <span class="text-sm font-medium">Use TLS</span>
+                    </label>
+                    <div class="flex-grow">
+                        <label class="block text-sm font-medium mb-1">From Email</label>
+                        <input type="email" name="smtp_from" placeholder="noreply@precliniverse.local" 
+                               class="w-full bg-gray-700 border border-gray-600 rounded p-2 text-sm focus:outline-none focus:border-blue-500">
+                    </div>
                 </div>
             </div>
 

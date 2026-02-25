@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from typing import List
+from typing import List, Optional
 import os
 import secrets
 from app.services.compose import generate_precliniverse_compose
@@ -37,7 +37,17 @@ async def generate(
     facility_name: str = Form(...),
     db_pass: str = Form(None),
     sso_pass: str = Form(None),
-    modules: str = Form(...)
+    modules: str = Form(...),
+    # Admin
+    admin_email: str = Form(None),
+    admin_pass: str = Form(None),
+    # SMTP
+    smtp_host: str = Form(None),
+    smtp_port: int = Form(587),
+    smtp_user: str = Form(None),
+    smtp_pass: str = Form(None),
+    smtp_tls: str = Form(None), # Checkbox sends 'on' or None
+    smtp_from: str = Form(None)
 ):
     module_list = modules.split(",")
     # If passwords are not provided, generate them
@@ -49,7 +59,19 @@ async def generate(
         "db_pass": db_p,
         "sso_pass": sso_p,
         "modules": module_list,
-        "db_external": False # For now
+        "db_external": False,
+        "admin_config": {
+            "email": admin_email,
+            "password": admin_pass if admin_pass else secrets.token_urlsafe(12)
+        },
+        "smtp_config": {
+            "host": smtp_host,
+            "port": smtp_port,
+            "user": smtp_user,
+            "password": smtp_pass,
+            "tls": True if smtp_tls == "on" else False,
+            "from_email": smtp_from
+        }
     }
     
     compose_content = generate_precliniverse_compose(config)
